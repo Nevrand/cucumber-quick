@@ -1,12 +1,8 @@
 import * as vscode from 'vscode';
 import {
-	getCucumberQuickObject,
-	createCommandToExecuteFeature,
 	executeCucumberQuickCommand,
 	createCommandToExecuteScenario,
 	getScenarioName,
-	getCucumberQuickScript,
-	getCucumberQuickTool,
 } from './utils';
 import { killActiveProcess } from './executeCommand';
 
@@ -15,30 +11,80 @@ export let commandOutput: vscode.OutputChannel | null = null;
 export function activate(context: vscode.ExtensionContext) {
 	commandOutput = vscode.window.createOutputChannel('CucumberQuickRunnerLog');
 	context.subscriptions.push(commandOutput);
-	context.subscriptions.push(runScenarioDisposable);
-	context.subscriptions.push(runFeatureDisposable);
+	context.subscriptions.push(runChromeDesktopDisposable);
+	context.subscriptions.push(runChromeTabletDisposable);
+	context.subscriptions.push(runChromeMobileDisposable);
+	context.subscriptions.push(runWebkitDesktopDisposable);
+	context.subscriptions.push(runWebkitTabletDisposable);
+	context.subscriptions.push(runWebkitMobileDisposable);
+	context.subscriptions.push(runFirefoxDisposable);
 }
 
-const runScenarioDisposable = vscode.commands.registerCommand('execute.scenario', () => {
-	const cucumberQuickObject = getCucumberQuickObject();
-	const cucumberQuickScript: string = getCucumberQuickScript(cucumberQuickObject);
+const runChromeDesktopDisposable = vscode.commands.registerCommand('execute.scenario.chrome.desktop', () => {
 	const currentScenarioName: string = getScenarioName();
-	const toolUsed: string = getCucumberQuickTool(cucumberQuickObject);
-	const scenarioCommand: string = createCommandToExecuteScenario(currentScenarioName, toolUsed);
+	const scenarioCommand: string = createCommandToExecuteScenario(currentScenarioName);
 	if (commandOutput) {
-		executeCucumberQuickCommand(cucumberQuickScript, scenarioCommand, toolUsed);
+		executeCucumberQuickCommand(scenarioCommand + " chrome desktop");
 	} else {
 		logErrorIfOutputNotDefined();
 	}
 });
 
-const runFeatureDisposable = vscode.commands.registerCommand('execute.feature', () => {
-	const cucumberQuickObject = getCucumberQuickObject();
-	const cucumberQuickScript: string = getCucumberQuickScript(cucumberQuickObject);
-	const featureCommand: string = createCommandToExecuteFeature(cucumberQuickObject);
-	const toolUsed: string = getCucumberQuickTool(cucumberQuickObject);
+const runChromeTabletDisposable = vscode.commands.registerCommand('execute.scenario.chrome.tablet', () => {
+	const currentScenarioName: string = getScenarioName();
+	const scenarioCommand: string = createCommandToExecuteScenario(currentScenarioName);
 	if (commandOutput) {
-		executeCucumberQuickCommand(cucumberQuickScript, featureCommand, toolUsed);
+		executeCucumberQuickCommand(scenarioCommand + " chrome tablet");
+	} else {
+		logErrorIfOutputNotDefined();
+	}
+});
+
+const runChromeMobileDisposable = vscode.commands.registerCommand('execute.scenario.chrome.mobile', () => {
+	const currentScenarioName: string = getScenarioName();
+	const scenarioCommand: string = createCommandToExecuteScenario(currentScenarioName);
+	if (commandOutput) {
+		executeCucumberQuickCommand(scenarioCommand + " chrome mobile");
+	} else {
+		logErrorIfOutputNotDefined();
+	}
+});
+
+const runWebkitDesktopDisposable = vscode.commands.registerCommand('execute.scenario.webkit.desktop', () => {
+	const currentScenarioName: string = getScenarioName();
+	const scenarioCommand: string = createCommandToExecuteScenario(currentScenarioName);
+	if (commandOutput) {
+		executeCucumberQuickCommand(scenarioCommand + " webkit desktop");
+	} else {
+		logErrorIfOutputNotDefined();
+	}
+});
+
+const runWebkitTabletDisposable = vscode.commands.registerCommand('execute.scenario.webkit.tablet', () => {
+	const currentScenarioName: string = getScenarioName();
+	const scenarioCommand: string = createCommandToExecuteScenario(currentScenarioName);
+	if (commandOutput) {
+		executeCucumberQuickCommand(scenarioCommand + " webkit tablet");
+	} else {
+		logErrorIfOutputNotDefined();
+	}
+});
+
+const runWebkitMobileDisposable = vscode.commands.registerCommand('execute.scenario.webkit.mobile', () => {
+	const currentScenarioName: string = getScenarioName();
+	const scenarioCommand: string = createCommandToExecuteScenario(currentScenarioName);
+	if (commandOutput) {
+		executeCucumberQuickCommand(scenarioCommand + " webkit mobile");
+	} else {
+		logErrorIfOutputNotDefined();
+	}
+});
+
+const runFirefoxDisposable = vscode.commands.registerCommand('execute.scenario.firefox', () => {
+	const currentScenarioName: string = getScenarioName();
+	const scenarioCommand: string = createCommandToExecuteScenario(currentScenarioName);
+	if (commandOutput) {
+		executeCucumberQuickCommand(scenarioCommand + " firefox");
 	} else {
 		logErrorIfOutputNotDefined();
 	}
@@ -46,9 +92,9 @@ const runFeatureDisposable = vscode.commands.registerCommand('execute.feature', 
 
 const logErrorIfOutputNotDefined = () => {
 	vscode.window.showErrorMessage(
-		`vs code output terminal not defined. Please ensure all required configuration. If npt solved, raise an issue here: https://github.com/abhinaba-ghosh/cucumber-quick/issues`
+		`VS Code output terminal not defined. Please ensure all required configuration.`
 	);
-	throw new Error('vs code output terminal not defined. Please ensure all required configuration.');
+	throw new Error('VS Code output terminal not defined. Please ensure all required configuration.');
 };
 // This method is called when the extension is deactivated
 export function deactivate() {

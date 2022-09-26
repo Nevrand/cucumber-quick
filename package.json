@@ -1,43 +1,103 @@
 {
-	"name": "cucumberquick",
-	"displayName": "Cucumber Quick",
-	"description": "Cucumber Quick - a quick cucumber executer",
-	"version": "2.2.0",
-	"publisher": "AbhinabaGhosh",
+	"name": "cucumberrunner",
+	"displayName": "Cucumber Runner",
+	"description": "Cucumber Runner - a simple cucumber executer",
+	"version": "0.0.1",
+	"publisher": "nevrand",
 	"engines": {
 		"vscode": "^1.44.0"
 	},
 	"categories": [
 		"Programming Languages"
 	],
-	"author": "Abhinaba Ghosh",
+	"author": "nevrand",
 	"icon": "media/icon.png",
 	"activationEvents": [
-		"onCommand:execute.scenario",
-		"onCommand:execute.feature"
+		"onCommand:execute.scenario.chrome.desktop",
+		"onCommand:execute.scenario.chrome.tablet",
+		"onCommand:execute.scenario.chrome.mobile",
+		"onCommand:execute.scenario.webkit.desktop",
+		"onCommand:execute.scenario.webkit.tablet",
+		"onCommand:execute.scenario.webkit.mobile",
+		"onCommand:execute.scenario.firefox"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "execute.scenario",
-				"title": "Run Cucumber Scenario"
+				"command": "execute.scenario.chrome.desktop",
+				"title": "Desktop"
 			},
 			{
-				"command": "execute.feature",
-				"title": "Run Cucumber Feature"
+				"command": "execute.scenario.chrome.tablet",
+				"title": "Tablet"
+			},
+			{
+				"command": "execute.scenario.chrome.mobile",
+				"title": "Mobile"
+			},
+			{
+				"command": "execute.scenario.webkit.desktop",
+				"title": "Desktop"
+			},
+			{
+				"command": "execute.scenario.webkit.tablet",
+				"title": "Tablet"
+			},
+			{
+				"command": "execute.scenario.webkit.mobile",
+				"title": "Mobile"
+			},
+			{
+				"command": "execute.scenario.firefox",
+				"title": "Run scenario in Firefox"
 			}
 		],
 		"menus": {
 			"editor/context": [
 				{
-					"command": "execute.scenario"
+					"submenu": "execute.scenario.chrome"
 				},
 				{
-					"command": "execute.feature"
+					"submenu": "execute.scenario.webkit"
+				},
+				{
+					"command": "execute.scenario.firefox"
+				}
+			],
+			"execute.scenario.chrome": [
+				{
+					"command": "execute.scenario.chrome.desktop"
+				},
+				{
+					"command": "execute.scenario.chrome.tablet"
+				},
+				{
+					"command": "execute.scenario.chrome.mobile"
+				}
+			],
+			"execute.scenario.webkit": [
+				{
+					"command": "execute.scenario.webkit.desktop"
+				},
+				{
+					"command": "execute.scenario.webkit.tablet"
+				},
+				{
+					"command": "execute.scenario.webkit.mobile"
 				}
 			]
-		}
+		},
+		"submenus": [
+			{
+				"id": "execute.scenario.chrome",
+				"label": "Run scenario in Chrome"
+			},
+			{
+				"id": "execute.scenario.webkit",
+				"label": "Run scenario in Webkit"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -49,16 +109,17 @@
 	},
 	"dependencies": {
 		"spawn-command": "0.0.2-1",
-		"tree-kill": "^1.1.0"
+		"tree-kill": "^1.1.0",
+		"vsce": "^2.11.0"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.44.0",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^14.6.0",
-		"eslint": "^6.8.0",
-		"@typescript-eslint/parser": "^2.26.0",
+		"@types/vscode": "^1.44.0",
 		"@typescript-eslint/eslint-plugin": "^2.26.0",
+		"@typescript-eslint/parser": "^2.26.0",
+		"eslint": "^6.8.0",
 		"glob": "^7.1.6",
 		"mocha": "^7.1.1",
 		"typescript": "^3.8.3",

@@ -55,19 +55,8 @@ export const getCucumberQuickTool = (cucumberQuickConfig: CucumberQuickConfigura
  * @param command
  * @param tool
  */
-export const executeCucumberQuickCommand = (script: string, command: string, tool?: string) => {
-	// const terminal = getActiveTerminal();
-	// terminal?.show();
-	const executableCommand: string = tool === 'cucumberjs' ? `${command}` : `${script} ${command}`;
-
-	if (tool === 'cypress') {
-		const terminal = getActiveTerminal();
-		terminal?.show();
-		terminal.sendText('clear');
-		terminal.sendText(executableCommand);
-	} else {
-		startProcess(executableCommand);
-	}
+export const executeCucumberQuickCommand = (command: string) => {
+	startProcess(command);
 };
 
 /**
@@ -107,54 +96,9 @@ export const getScenarioName = () => {
  * @param cucumberQuickConfiguration
  * @param scenarioName
  */
-export const createCommandToExecuteScenario = (scenarioName: string, tool: string): string => {
-	if (tool === 'cypress' && !scenarioName.includes('@')) {
-		vscode.window.showErrorMessage(
-			`Cypress cucumber preprocessor does not support running scenario by scenario name. Right click on the Tags and press 'Run Cucumber Scenario'`
-		);
-		throw new Error('Scenario Name incorrect. Please select scenario');
-	}
-	const toolCommands: Map<any, any> = new Map()
-		.set('protractor', `--cucumberOpts.name="${scenarioName}"`)
-		.set('webdriverio', `--cucumberOpts.name="${scenarioName}"`)
-		.set('cypress', `run -e TAGS="${scenarioName.split(/(\s+)/)[0]}"`)
-		.set('cucumberjs', `--name "${scenarioName}"`);
-
-	if (toolCommands.get(tool) === undefined) {
-		vscode.window.showErrorMessage(
-			`un-supported tool found: ${tool}.Cucumber-Quick configuration tool only accept: protractor/webdriverio/cypress/cucumberjs.`
-		);
-		throw new Error('Scenario Name incorrect. Please select scenario');
-	}
-	return toolCommands.get(tool);
-};
-
-/**
- * create command needed for specific feature execution
- * @param cucumberQuickConfiguration
- */
-export const createCommandToExecuteFeature = (cucumberQuickConfiguration: CucumberQuickConfiguration): string => {
-	const currentFeatureFilePath: string | undefined = vscode.window.activeTextEditor?.document.uri.fsPath;
-	const currentRootFolderName: string | undefined = vscode.workspace.getWorkspaceFolder(workspaceFolder)?.name;
-
-	const toolCommands = new Map()
-		.set('protractor', `--specs="${currentFeatureFilePath}"`)
-		.set('webdriverio', `--spec="${currentFeatureFilePath}"`)
-		.set(
-			'cypress',
-			`run -e GLOB="${currentFeatureFilePath?.replace(new RegExp('.*' + currentRootFolderName), '').substr(1)}"`
-		)
-		.set('cucumberjs', getCucumberJsFeatureExecutable(cucumberQuickConfiguration, currentFeatureFilePath));
-
-	// console.log('toolCommands.get(tool):', toolCommands.get(cucumberQuickConfiguration.tool));
-
-	if (currentFeatureFilePath === undefined && toolCommands.get(cucumberQuickConfiguration.tool) === undefined) {
-		vscode.window.showErrorMessage(
-			`un-supported tool found: ${cucumberQuickConfiguration.tool}.Cucumber-Quick configuration tool only accept: protractor/webdriverio/cypress/cucumberjs.`
-		);
-		throw new Error('Scenario Name incorrect. Please select scenario');
-	}
-	return toolCommands.get(cucumberQuickConfiguration.tool);
+export const createCommandToExecuteScenario = (scenarioName: string): string => {
+	let command = `npm run test project="${scenarioName.match(/^\w+/)}" name="${scenarioName.replace(/^.+\|/, '')}"`;
+	return command;
 };
 
 /**
